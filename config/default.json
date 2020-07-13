@@ -1,0 +1,5 @@
+{
+  "jwtPrivateKey": "unSecureKey",
+  "db": "mongodb://localhost/attendex",
+  "port": "3900"
+}
