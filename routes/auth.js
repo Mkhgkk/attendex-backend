@@ -6,26 +6,32 @@ const express = require("express");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    let member = await Member.findOne({ phone: req.body.phone });
-    if (!member) return res.status(400).send("Invalid phone or password.");
+  let member = await Member.findOne({ phone: req.body.phone });
+  if (!member) return res.status(400).send("Invalid phone or password.");
 
-    const validPassword = await bcrypt.compare(req.body.password, member.password);
-    if (!validPassword) return res.status(400).send("Invalid phone or password.");
+  const validPassword = await bcrypt.compare(
+    req.body.password,
+    member.password
+  );
+  if (!validPassword) return res.status(400).send("Invalid phone or password.");
 
-    const token = member.generateAuthToken();
-    res.send(token);
+  const token = member.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send(token);
 });
 
 function validate(req) {
-    const schema = {
-        phone: Joi.string().min(5).max(255).required(),
-        password: Joi.string().min(5).max(255).required(),
-    };
+  const schema = {
+    phone: Joi.string().min(5).max(255).required(),
+    password: Joi.string().min(5).max(255).required(),
+  };
 
-    return Joi.validate(req, schema);
+  return Joi.validate(req, schema);
 }
 
 module.exports = router;
