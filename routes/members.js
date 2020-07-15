@@ -16,6 +16,14 @@ router.get("/", async (req, res) => {
   res.send(members);
 });
 
+router.delete("/:id", async (req, res) => {
+  const member = await Member.deleteOne({ _id: req.params.id });
+
+  if (!member) return res.status(404).send("Member does not exsit.");
+
+  res.send(member);
+});
+
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);

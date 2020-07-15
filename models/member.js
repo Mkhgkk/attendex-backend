@@ -18,7 +18,7 @@ const memberSchema = new mongoose.Schema({
   },
   department: {
     type: String,
-    enum: ["Android Development", "IOS Developemt", "Human Resource"],
+    enum: ["Android Development", "IOS Development", "Human Resource"],
   },
   isAdmin: {
     type: Boolean,
